@@ -50,4 +50,4 @@ def imread(filename, Bx = 8, By = 8):
 
     numBlock = YCbCr.size / (Bx * By)
 
-    return YCbCr
+    return YCbCr, numBlock
