@@ -1,6 +1,7 @@
 import numpy as np
 
 class key:
+
     def __init__(self, numBlock, keyStr = None):
         if keyStr:
             self.check_validity(keyStr, numBlock)
@@ -32,24 +33,21 @@ class scramblingKey(key):
         self.keyStr = self.keyToKeyStr()
 
     def keyStrToKey(self, keyStr):
-        key = []
-        for i in range(0, len(keyStr), 2):
-            key.append(int(keyStr[i : i+2]))
+        key = [int(i) for i in keyStr.split('.')]
         return np.array(key)
 
     def keyToKeyStr(self):
         keyStr = ''
         for i in self.key:
-            if i < 10:
-                keyStr += '0'
             keyStr += str(i)
-        return keyStr
+            keyStr += '.'
+        return keyStr[: -1]
 
     def check_validity(self, keyStr, numBlock):
-        if len(keyStr) % 2 != 0:
-            raise Exception('Key length is incorrect')
         key = self.keyStrToKey(keyStr)
         key = np.sort(key)
+        if len(key) != numBlock:
+            raise Exception('Key length is incorrect')
         for i in range(numBlock):
             if i != key[i]:
                 raise Exception('Key format is incorrect')
@@ -73,7 +71,10 @@ class rotateInverseKey(key):
     def check_validity(self, keyStr, numBlock):
         if len(keyStr) != numBlock:
             raise Exception('Key length must be equal to n')
-        if keyStr.count('0') + keyStr.count('1') != numBlock:
+        counter = 0
+        for i in range(8):
+            counter += keyStr.count(str(i))
+        if counter != numBlock:
             raise Exception("Key can only composed by '0', '1', '2',..., '7'")
 
 class NPTransKey(key):

@@ -1,5 +1,6 @@
 import matplotlib.image as mpimg
 import numpy as np
+import cv2
 
 def cuttingPreprocessing(img, Bx = 8, By = 8):
     # cutting scheme
@@ -73,7 +74,7 @@ def blocksToYCbCr(blocks, shape):
 
     return YCbCr
 
-def imread(filename, Bx = 8, By = 8):
+def readUnencryptedImage(filename, Bx = 8, By = 8):
     img = mpimg.imread(filename)
     img = cuttingPreprocessing(img, Bx, By)
 
@@ -90,3 +91,13 @@ def imread(filename, Bx = 8, By = 8):
     numBlock = int(YCbCr.size / (Bx * By))
 
     return img, YCbCr, numBlock
+
+def readencryptedImage(filename, Bx = 8, By = 8):
+    YCbCr = mpimg.imread(filename)
+
+    numBlock = int(YCbCr.size / (Bx * By))
+
+    return YCbCr, numBlock
+
+def saveImage(filename, img):
+    cv2.imwrite(filename, img)
