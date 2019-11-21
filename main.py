@@ -30,6 +30,7 @@ plt.imshow(encryptedImg, cmap = 'gray')
 plt.title('Encrypted')
 plt.show()
 
+# save encrypted image
 image.saveImage('encryptedImg.jpg', encryptedImg)
 
 # read image to decrypt
@@ -40,12 +41,13 @@ k1 = key.scramblingKey(n, k1.keyStr)
 k2 = key.rotateInverseKey(n, k2.keyStr)
 k3 = key.NPTransKey(n, k3.keyStr)
 
-# decrypt
 decryptedImg = decrypt.decrypt(encryptedImg, k1, k2, k3)
 
+# save decrypted image
+image.saveImage('decryptedImg.jpg', decryptedImg)
+
 # result after decryption
+decryptedImg = image.readUnencryptedImage('decryptedImg.jpg')[0]
 plt.imshow(decryptedImg)
 plt.title('Decrypted')
 plt.show()
-
-image.saveImage("decryptedImg.jpg", decryptedImg)

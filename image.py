@@ -100,4 +100,14 @@ def readencryptedImage(filename, Bx = 8, By = 8):
     return YCbCr, numBlock
 
 def saveImage(filename, img):
+    # RGB
+    if img.ndim == 3:
+        saveImg = np.zeros(img.shape)
+        saveImg[:, :, 0] = img[:, :, 2]
+        saveImg[:, :, 1] = img[:, :, 1]
+        saveImg[:, :, 2] = img[:, :, 0]
+        cv2.imwrite(filename, saveImg)
+        return
+
+    # grayscale image
     cv2.imwrite(filename, img)
