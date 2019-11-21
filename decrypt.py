@@ -33,10 +33,12 @@ def inverseNPtrans(blocks, key: key.NPTransKey):
     for ind, k in enumerate(key.key):
         if k == 1:
             blocks[ind] = 255 - blocks[ind]
+    return blocks
 
-def decrypt(img, key1: key.scramblingKey, key2: key.rotateInverseKey, key3: key.NPTransKey):
-    img = inverseNPtrans(img, key3)
-    img = inverseRotateAndInverse(img, key2)
-    img = inverseScramble(img, key1)
-    img = image.postProcessing(img)
-    return img
+def decrypt(YCbCr, key1: key.scramblingKey, key2: key.rotateInverseKey, key3: key.NPTransKey):
+    blocks = image.YCbCrToBlocks(YCbCr)
+    blocks = inverseNPtrans(blocks, key3)
+    blocks = inverseRotateAndInverse(blocks, key2)
+    blocks = inverseScramble(blocks, key1)
+    img = image.blocksToYCbCr(blocks, YCbCr.shape)
+    return image.postProcessing(img)
