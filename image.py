@@ -1,10 +1,7 @@
 import matplotlib.image as mpimg
 import numpy as np
 
-Bx = 8
-By = 8
-
-def cuttingPreprocessing(img, Bx, By):
+def cuttingPreprocessing(img, Bx = 8, By = 8):
     # cutting scheme
     h_cut = img.shape[1] % Bx
     v_cut = img.shape[0] % By
@@ -18,7 +15,7 @@ def cuttingPreprocessing(img, Bx, By):
 
     return img
 
-def paddingPreprocessing(img, Bx, By):
+def paddingPreprocessing(img, Bx = 8, By = 8):
     # padding scheme
     h_pad = Bx - img.shape[1] % Bx
     v_pad = By - img.shape[0] % By
@@ -34,6 +31,48 @@ def paddingPreprocessing(img, Bx, By):
 
     return img
 
+def postProcessing(YCbCr):
+    imgWidth = int(YCbCr.shape[1] / 3)
+    img = np.zeros((YCbCr.shape[0], imgWidth, 3), dtype = int)
+
+
+    Y = YCbCr[:, : imgWidth]
+    Cb = YCbCr[:, imgWidth : 2 * imgWidth]
+    Cr = YCbCr[:, 2 * imgWidth :]
+
+    r = (298.082 / 256) * Y + (408.583 / 256) * Cr - 222.921
+    g = (298.082 / 256) * Y - (100.291 / 256) * Cb - (208.120 / 256) * Cr + 135.576
+    b = (298.082 / 256) * Y + (516.412 / 256) * Cb - 276.836
+
+    img[:, :, 0] = r
+    img[:, :, 1] = g
+    img[:, :, 2] = b
+
+    img = np.clip(img, 0, 255)
+
+    return img
+
+def YCbCrToBlocks(YCbCr, Bx = 8, By = 8):
+    blocks = []
+    for i in range(0, YCbCr.shape[0], By):
+        for j in range(0, YCbCr.shape[1], Bx):
+            startPoint = (i, j)
+            blocks.append(YCbCr[i : i + 8, j : j + 8])
+
+    return np.array(blocks)
+
+def blocksToYCbCr(blocks, shape):
+    Bx, By = blocks.shape[2], blocks.shape[1]
+    numXaxis = int(shape[1] / Bx)
+    numYaxis = int(shape[0] / By)
+    rows = []
+    for i in range(numYaxis):
+        rows.append(np.concatenate([blocks[i * numXaxis + j] for j in range(numXaxis)] , axis = 1))
+
+    YCbCr = np.concatenate([rows[i] for i in range(numYaxis)], axis = 0)
+
+    return YCbCr
+
 def imread(filename, Bx = 8, By = 8):
     img = mpimg.imread(filename)
     img = cuttingPreprocessing(img, Bx, By)
@@ -48,6 +87,6 @@ def imread(filename, Bx = 8, By = 8):
 
     YCbCr = np.hstack((y, cb, cr))
 
-    numBlock = YCbCr.size / (Bx * By)
+    numBlock = int(YCbCr.size / (Bx * By))
 
     return YCbCr, numBlock
