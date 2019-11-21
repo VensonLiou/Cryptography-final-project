@@ -54,7 +54,7 @@ class scramblingKey(key):
             if i != key[i]:
                 raise Exception('Key format is incorrect')
 
-class rotateInverseKey:
+class rotateInverseKey(key):
 
     def newKey(self, numBlock):
         self.key = np.random.randint(8, size = numBlock)
@@ -76,9 +76,10 @@ class rotateInverseKey:
         if keyStr.count('0') + keyStr.count('1') != numBlock:
             raise Exception("Key can only composed by '0', '1', '2',..., '7'")
 
-class NPTransKey:
+class NPTransKey(key):
+    
     def newKey(self, numBlock):
-        self.key = np.random.randint(8, size=numBlock)
+        self.key = np.random.randint(2, size=numBlock)
         self.keyStr = self.keyToKeyStr()
 
     def keyStrToKey(self, keyStr):
