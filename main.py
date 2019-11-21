@@ -36,11 +36,12 @@ image.saveImage('encryptedImg.jpg', encryptedImg)
 # read image to decrypt
 encryptedImg, n = image.readencryptedImage('encryptedImg.jpg')
 
-# specify keys
+# specify keys using key string
 k1 = key.scramblingKey(n, k1.keyStr)
 k2 = key.rotateInverseKey(n, k2.keyStr)
 k3 = key.NPTransKey(n, k3.keyStr)
 
+# decrypt
 decryptedImg = decrypt.decrypt(encryptedImg, k1, k2, k3)
 
 # save decrypted image
@@ -50,4 +51,23 @@ image.saveImage('decryptedImg.jpg', decryptedImg)
 decryptedImg = image.readUnencryptedImage('decryptedImg.jpg')[0]
 plt.imshow(decryptedImg)
 plt.title('Decrypted')
+plt.show()
+
+# the way to store / load key from file
+# save key
+key.save(k1, k2, k3)
+
+# load keys from file
+k1, k2, k3 = key.load()
+
+# decrypt
+decryptedImg = decrypt.decrypt(encryptedImg, k1, k2, k3)
+
+# save decrypted image
+image.saveImage('decryptedImg.jpg', decryptedImg)
+
+# result after decryption
+decryptedImg = image.readUnencryptedImage('decryptedImg.jpg')[0]
+plt.imshow(decryptedImg)
+plt.title('Decrypted by keys load from file')
 plt.show()

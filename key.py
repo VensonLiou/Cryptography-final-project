@@ -2,28 +2,19 @@ import numpy as np
 
 class key:
 
-    def __init__(self, numBlock, keyStr = None):
+    def __init__(self, numBlock = None, keyStr = None, fromFile = None):
         if keyStr:
             self.check_validity(keyStr, numBlock)
             self.key = self.keyStrToKey(keyStr)
             self.keyStr = keyStr
+        elif fromFile:
+            self.key = self.keyStrToKey(fromFile)
+            self.keyStr = fromFile
         else:
             self.newKey(numBlock)
 
     def __str__(self):
         return self.keyStr
-
-    def newKey(self, numBlock):
-        pass
-
-    def keyStrToKey(self, keyStr):
-        pass
-
-    def keyToKeyStr(self):
-        pass
-
-    def check_validity(self, keyStr, numBlock):
-        pass
 
 class scramblingKey(key):
 
@@ -98,3 +89,14 @@ class NPTransKey(key):
             raise Exception('Key length must be equal to n')
         if keyStr.count('0') + keyStr.count('1') != numBlock:
             raise Exception("Key can only composed by '0' and '1'")
+
+def save(key1: scramblingKey, key2: rotateInverseKey, key3: NPTransKey, keyFile = 'key.store'):
+    with open(keyFile, mode = 'w') as f:
+        f.write(key1.keyStr + '\n' + key2.keyStr + '\n' + key3.keyStr)
+
+def load(keyFile = 'key.store'):
+    f = open(keyFile, mode='r')
+    key1 = scramblingKey(fromFile = f.readline()[:-1])
+    key2 = rotateInverseKey(fromFile = f.readline()[:-1])
+    key3 = NPTransKey(fromFile = f.readline())
+    return key1, key2, key3
