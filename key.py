@@ -95,8 +95,8 @@ def save(key1: scramblingKey, key2: rotateInverseKey, key3: NPTransKey, keyFile 
         f.write(key1.keyStr + '\n' + key2.keyStr + '\n' + key3.keyStr)
 
 def load(keyFile = 'key.store'):
-    f = open(keyFile, mode='r')
-    key1 = scramblingKey(fromFile = f.readline()[:-1])
-    key2 = rotateInverseKey(fromFile = f.readline()[:-1])
-    key3 = NPTransKey(fromFile = f.readline())
+    with open(keyFile, mode = 'r') as f:
+        key1 = scramblingKey(fromFile = f.readline()[:-1])
+        key2 = rotateInverseKey(fromFile = f.readline()[:-1])
+        key3 = NPTransKey(fromFile = f.readline())
     return key1, key2, key3
