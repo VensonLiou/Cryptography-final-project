@@ -57,7 +57,6 @@ def YCbCrToBlocks(YCbCr, Bx = 8, By = 8):
     blocks = []
     for i in range(0, YCbCr.shape[0], By):
         for j in range(0, YCbCr.shape[1], Bx):
-            startPoint = (i, j)
             blocks.append(YCbCr[i : i + 8, j : j + 8])
 
     return np.array(blocks)
