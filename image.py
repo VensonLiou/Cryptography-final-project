@@ -74,7 +74,8 @@ def blocksToYCbCr(blocks, shape):
     return YCbCr
 
 def readUnencryptedImage(filename, Bx = 8, By = 8):
-    img = mpimg.imread(filename)
+    img = cv2.imread(filename)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = cuttingPreprocessing(img, Bx, By)
 
     r = img[:, :, 0]

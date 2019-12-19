@@ -5,7 +5,7 @@ import encrypt
 import decrypt
 
 # read image
-ori, YCbCr, n = image.readUnencryptedImage('doggy.jpg')
+ori, YCbCr, n = image.readUnencryptedImage('err.png')
 
 plt.imshow(ori)
 plt.title('Original')
